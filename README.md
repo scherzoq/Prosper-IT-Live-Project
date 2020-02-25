@@ -3,7 +3,7 @@
 ## Introduction
 During my last two weeks at The Tech Academy, I worked with my peers on a team to develop a full-scale web application using ASP .Net MVC and Entity Framework. We worked on an interactive website to manage dynamic content (e.g., productions, cast members, subscribers) for a theater/acting company. The web application served as a content management service (CMS) for users, allowing them to easily manage the content on their website without needing to possess technical expertise.
 
-I worked on stories involving both back-end and front-end functionality (most of the stories I worked on involved both of these) in Visual Studio, using a variety of programming languages: C#, HTML/CSS, JavaScript, SQL. The stories I worked on required that I look for solutions independently, but also coordinate effectively with team members. They taught me the importance of breaking jobs up into smaller tasks while not losing sight of the larger context. And they demonstrated to me that adaptability is a crucial quality for a developer to have.
+I worked on stories involving both back-end and front-end functionality (most of the stories I worked on involved both of these) in Visual Studio, using a variety of programming languages: C#, HTML/CSS, JavaScript, SQL. The stories I worked on required that I look for solutions independently, but also coordinate effectively with team members. They taught me the importance of breaking jobs up into smaller tasks while not losing sight of the larger context: specifically, it was critical to understand end goals/functionalities required by the user, and to plan accordingly, but also to be able to focus on the specific tasks that would move the project along. And the project demonstrated to me, again and again, that adaptability - along with the ability to find ways in which to overcome roadblocks - are crucial skills for a software developer to have.
 
 I am proud of my work – and of my growth as a software developer – during this two-week sprint. Below please find more detailed descriptions of the main [stories](#stories) I worked on, along with code snippets and navigation links. Included as well is a [summary of skills](#summary-of-skills) learned/reinforced over the course of the project.
 
@@ -79,7 +79,7 @@ I then wrote a method in the Admin controller that: 1. created a new AdminSettin
         }
 
 ### Admin Settings Reader Helper
-For this related story, I created a helper function that – whenever it was called – would retrieve the Admin Settings JSON object, deserialize it into an AdminSettings object (as defined by the model I created; see previous story above), and return that object to whatever code called the function. Here is my code for the helper function:
+For this related story, I created a helper function that – whenever it was called – would retrieve the Admin Settings JSON object from the [Admin Settings Function](#admin-settings-function) story, deserialize it into a C# AdminSettings object (as defined by the model I created), and return that object to whatever code called the function. Here is my code for the helper function:
 
 	public class AdminSettingsReader
 	{
@@ -106,7 +106,7 @@ I also implemented this helper function in the Admin Dashboard so that, by defau
 		return View(current);
 		}
 				
-– and then passes these settings to the view. Here is my CSHTML code from the Dashboard view file:
+– and then passes these settings to the view. Here is the relevant code from the CSHTML view file:
 
 	@using (Html.BeginForm("SettingsUpdate", "Admin", FormMethod.Post))
 	{
@@ -130,7 +130,7 @@ For this story, I implemented a helper method for uploading images and convertin
 
 I worked in conjunction with other team members who were implementing the same helper method to allow production photos to be added in other parts of the website. This allowed for more synchronized, consistent code.
 
-The Edit method for the Cast Member controller required that I add logic to account for whether or not the photo was edited or left unchanged whenever the Edit method was called:
+The Edit method for the Cast Member controller required that I add logic to account for whether or not the photo was edited or left unchanged whenever the Edit method was called, and as a result of this, I also needed to make tweaks to other parts of the method:
 
 	[HttpPost]
         [ValidateAntiForgeryToken]
@@ -158,7 +158,8 @@ The Edit method for the Cast Member controller required that I add logic to acco
                 {
                     currentCastMember.Photo = oldPhoto;
                 }
-  		castMember.CastMemberPersonID = db.Users.Find(userId).Id;            
+		    castMember.CastMemberPersonID = db.Users.Find(userId).Id;
+               
                 db.Entry(currentCastMember).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -167,9 +168,9 @@ The Edit method for the Cast Member controller required that I add logic to acco
             return View(castMember);
         }
 
-In the Cast Member index view (CSHTML file), I wrote code that allowed each cast member’s photo to be displayed as a thumbnail. I also implemented an alternative display (“CastMember.jpg”, a default template file) in cases where no photo exsited for a cast member.
+In various parts of the website, including the Cast Member index view (CSHTML file), I wrote code that allowed each cast member’s photo to be displayed as a thumbnail. I also implemented an alternative display (“CastMember.jpg”, a default template file) in cases where no photo existed for a cast member:
 										
-	  @{
+	   @{
 		string img = "";
 		if (item.Photo != null)
 		{
@@ -185,7 +186,7 @@ In the Cast Member index view (CSHTML file), I wrote code that allowed each cast
 	    <img castImage" src="@img" / style="width:100class=" %">
 
 ### Cast Member Allow Null User
-In the Cast Member Create/Edit views, a dropdown list allowed an existing user to be added as a Cast Member. However, the dropdown list did not contain a null option. For this story, I had to revise the code to allow for a null option, since there would not always be a matching user for every Cast Member.
+In the Cast Member Create/Edit views, a dropdown list was utilized to allow an existing user to be added as a Cast Member. However, the dropdown list did not contain a null option. For this story, I had to revise the code to allow for a null option, since there would not always be a matching user for every Cast Member.
 
 I researched possible solutions and then employed the solution I found to be the most efficient one: a front-end solution that used method overloading (with re: to “DropDownList”) to pass a null-value label (“N/A”) as a parameter.
 
@@ -194,15 +195,15 @@ I researched possible solutions and then employed the solution I found to be the
                 <div class="col-md-10 formBox">
                     @Html.DropDownList("dbUsers", (IEnumerable<SelectListItem>)ViewData["dbUsers"], "N/A", htmlAttributes: new { @class = "form-control" })
                 </div>
-       </div>
+	</div>
 
-I also revised the code in the Cast Member controller to handle the possibility of a null value.
+I also revised the C# code in the Cast Member controller so that it would appropriately handle the possibility of a null value.
 
 ## Summary of Skills
-* Researching solutions. I independently researched and implemented solutions for every story I worked on, and gained valuable experience in the process
-* Overcoming roadblocks and adaptability. For example, substuting a C# back-end method for JavaScript/JQuery to successfuly write to a server-side JSON file
-* Testing/debugging code thoroughly yet efficiently. For example, in the “Capture Photo for Cast Member” story, I used various test cases (creating a cast member with OR without an image, editing an element with an existing image and changing OR not changing that image) to make sure that the code was functional in all cases, and ended up revising and fine-tuning my code to account for the different possibilities
-* Coordinating with team members, especially where consistency was required
-* Workflow and version control in the context of a team project
+* Researching solutions. I independently researched and implemented solutions for each story I worked on, and gained vital experience in the process of doing so.
+* Learning to overcome roadblocks and adaptability. For example, I substituted a C# back-end method in place of JavaScript/JQuery to successfuly write to a server-side JSON file.
+* Testing/debugging code thoroughly yet efficiently. For example, in the “Capture Photo for Cast Member” story, I thoroughly tested the functionality of the Create/Edit pages (creating a cast member with OR without an image; editing an element with an existing image and then changing OR not changing that image) to make sure that the code worked in all cases. I ended up revising and fine-tuning my code to account for the different possibilities.
+* Coordinating with team members, especially where consistency was required.
+* Workflow planning and version control in the context of a team project.
 
 *Jump to: [Stories](#stories), [Summary of Skills](#summary-of-skills), [Page Top](#the-tech-academy-live-project)*
