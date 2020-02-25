@@ -59,7 +59,7 @@ Working to overcome this roadblock was a valuable learning experience for me. I 
 
 I then wrote a method in the Admin controller that: 1. created a new AdminSettings C# object using the dashboard form input, 2. converted this object to a JSON string, and 3. wrote this JSON string to the Admin Settings JSON file (in the same format shown earlier):
 
-				[HttpPost]
+	[HttpPost]
         public ActionResult SettingsUpdate(AdminSettings adminSet, seasonProductions seasonProd, recentDefinition recentDef)
         {
             AdminSettings settings = new AdminSettings();
@@ -81,47 +81,47 @@ I then wrote a method in the Admin controller that: 1. created a new AdminSettin
 ### Admin Settings Reader Helper
 For this related story, I created a helper function that – whenever it was called – would retrieve the Admin Settings JSON object, deserialize it into an AdminSettings object (as defined by the model I created; see previous story above), and return that object to whatever code called the function. Here is my code for the helper function:
 
-			public class AdminSettingsReader
+	public class AdminSettingsReader
+	{
+		public static AdminSettings CurrentSettings()
+		{
+			AdminSettings currentSettings = new AdminSettings();     
+			string filepath = System.Web.HttpContext.Current.Server.MapPath("~/AdminSettings.json");
+			string result = string.Empty;
+			using (StreamReader r = new StreamReader(filepath))
 			{
-					public static AdminSettings CurrentSettings()
-					{
-							AdminSettings currentSettings = new AdminSettings();     
-							string filepath = System.Web.HttpContext.Current.Server.MapPath("~/AdminSettings.json");
-							string result = string.Empty;
-							using (StreamReader r = new StreamReader(filepath))
-							{
-									result = r.ReadToEnd();
-							}
-							currentSettings = JsonConvert.DeserializeObject<AdminSettings>(result);
-							return currentSettings;
-					}
+				result = r.ReadToEnd();
 			}
+			currentSettings = JsonConvert.DeserializeObject<AdminSettings>(result);
+			return currentSettings;
+		}
+	}
 	
 I also implemented this helper function in the Admin Dashboard so that, by default, the input fields on the dashboard would be populated with the current settings. I wrote a brief controller method that uses the helper function to retrieve the current settings –
 
 	public ActionResult Dashboard()
-					{
-							AdminSettings current = new AdminSettings();
-							current = AdminSettingsReader.CurrentSettings();
-							return View(current);
-					}
+		{
+		AdminSettings current = new AdminSettings();
+		current = AdminSettingsReader.CurrentSettings();
+		return View(current);
+		}
 				
 – and then passes these settings to the view. Here is my CSHTML code from the Dashboard view file:
 
 	@using (Html.BeginForm("SettingsUpdate", "Admin", FormMethod.Post))
 	{
 	<div>
-			CURRENT SEASON:
-			<input type="number" name="Current_Season" value="@Html.DisplayFor(model => model.current_season)"><br />
-			SEASON PRODUCTIONS:<br />
-			Winter:<input type="number" name="Fall" value="@Html.DisplayFor(model => model.season_productions.fall)"><br>
-			Fall:<input type="number" name="Winter" value="@Html.DisplayFor(model => model.season_productions.winter)"><br>
-			Spring:<input type="number" name="Spring" value="@Html.DisplayFor(model => model.season_productions.spring)"><br>
-			RECENT DEFINITION:<br />
-			Span:<input type="number" name="Span" value="@Html.DisplayFor(model => model.recent_definition.span)"><br>
-			Date:<input type="date" name="Date" value="@Model.recent_definition.date.ToString("yyyy-MM-dd")"><br>
-			ONSTAGE:<input type="number" name="Onstage" value="@Html.DisplayFor(model => model.onstage)"><br />
-			<button type="submit">Submit</button>
+	CURRENT SEASON:
+	<input type="number" name="Current_Season" value="@Html.DisplayFor(model => model.current_season)"><br />
+	SEASON PRODUCTIONS:<br />
+	Winter:<input type="number" name="Fall" value="@Html.DisplayFor(model => model.season_productions.fall)"><br>
+	Fall:<input type="number" name="Winter" value="@Html.DisplayFor(model => model.season_productions.winter)"><br>
+	Spring:<input type="number" name="Spring" value="@Html.DisplayFor(model => model.season_productions.spring)"><br>
+	RECENT DEFINITION:<br />
+	Span:<input type="number" name="Span" value="@Html.DisplayFor(model => model.recent_definition.span)"><br>
+	Date:<input type="date" name="Date" value="@Model.recent_definition.date.ToString("yyyy-MM-dd")"><br>
+	ONSTAGE:<input type="number" name="Onstage" value="@Html.DisplayFor(model => model.onstage)"><br />
+	<button type="submit">Submit</button>
 	</div>
 	}
 
@@ -132,11 +132,10 @@ I worked in conjunction with other team members who were implementing the same h
 
 The Edit method for the Cast Member controller required that I add logic to account for whether or not the photo was edited or left unchanged whenever the Edit method was called:
 
-				[HttpPost]
+	[HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CastMemberID,Name,YearJoined,MainRole,Bio,Photo,CurrentMember")] CastMember castMember, HttpPostedFileBase file)
         {
-
             ModelState.Remove("CastMemberPersonID");
             string userId = Request.Form["dbUsers"].ToString();
             if (ModelState.IsValid)
@@ -159,8 +158,7 @@ The Edit method for the Cast Member controller required that I add logic to acco
                 {
                     currentCastMember.Photo = oldPhoto;
                 }
-  							castMember.CastMemberPersonID = db.Users.Find(userId).Id;
-               
+  		castMember.CastMemberPersonID = db.Users.Find(userId).Id;            
                 db.Entry(currentCastMember).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -171,30 +169,30 @@ The Edit method for the Cast Member controller required that I add logic to acco
 
 In the Cast Member index view (CSHTML file), I wrote code that allowed each cast member’s photo to be displayed as a thumbnail. I also implemented an alternative display (“CastMember.jpg”, a default template file) in cases where no photo exsited for a cast member.
 										
-										@{
-                        string img = "";
-                        if (item.Photo != null)
-                        {
-                            byte[] thumbBytes = ImageUploader.ImageThumbnail(item.Photo, 100, 100);
-                            var base64 = System.Convert.ToBase64String(thumbBytes);
-                            img = String.Format("data:image/png;base64,{0}", base64);
-                        }
-                        else
-                        {
-                            img = @Url.Content("~/Content/Images/CastMember.jpg");
-                        }
-                    }
-                    <img castImage" src="@img" / style="width:100class=" %">
+	  @{
+		string img = "";
+		if (item.Photo != null)
+		{
+		    byte[] thumbBytes = ImageUploader.ImageThumbnail(item.Photo, 100, 100);
+		    var base64 = System.Convert.ToBase64String(thumbBytes);
+		    img = String.Format("data:image/png;base64,{0}", base64);
+		}
+		else
+		{
+		    img = @Url.Content("~/Content/Images/CastMember.jpg");
+		}
+	    }
+	    <img castImage" src="@img" / style="width:100class=" %">
 
 ### Cast Member Allow Null User
 In the Cast Member Create/Edit views, a dropdown list allowed an existing user to be added as a Cast Member. However, the dropdown list did not contain a null option. For this story, I had to revise the code to allow for a null option, since there would not always be a matching user for every Cast Member.
 
 I researched possible solutions and then employed the solution I found to be the most efficient one: a front-end solution that used method overloading (with re: to “DropDownList”) to pass a null-value label (“N/A”) as a parameter.
 
-				<div class="form-group">
+	<div class="form-group">
                 <label class="inputLabel col-md-4"> &nbsp; &nbsp;Username</label>
                 <div class="col-md-10 formBox">
-                    @Html.DropDownList("dbUsers", (IEnumerable<SelectListItem>)ViewData["dbUsers"], "N/A", htmlAttributes: new { @class 										= "form-control" })
+                    @Html.DropDownList("dbUsers", (IEnumerable<SelectListItem>)ViewData["dbUsers"], "N/A", htmlAttributes: new { @class = "form-control" })
                 </div>
        </div>
 
