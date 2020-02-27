@@ -1,4 +1,4 @@
-# Live Project: Full-Scale Web Application (Using ASP.NET MVC and Entity Framework)
+# Live Project: Full-Scale Web Application Using ASP.NET MVC and Entity Framework
 
 ## Introduction
 During my last two weeks at The Tech Academy, I worked with my peers on a team to develop a full-scale web application using ASP.NET MVC and Entity Framework. We worked on an interactive website to manage dynamic content (e.g., productions, cast members, subscribers) for a theater/acting company. The web application served as a content management service (CMS) for users, allowing them to easily manage the content on their website without needing to possess technical expertise.
