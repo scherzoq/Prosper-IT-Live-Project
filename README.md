@@ -1,4 +1,4 @@
-# Live Project: Full-Scale Web Application Using ASP.NET MVC and Entity Framework
+# Prosper IT Live Project
 
 ## Introduction
 At the end of my time in The Tech Academy's C# and .NET Framework boot camp, I worked on a two-week live project for Prosper IT Consulting. This involved working with my peers on a team to develop a full-scale web application using ASP.NET MVC and Entity Framework. We worked on an interactive website to manage dynamic content (e.g., productions, cast members, subscribers) for a theater/acting company. The web application served as a content management service (CMS) for users, allowing them to easily manage the content on their website without needing to possess technical expertise.
@@ -206,4 +206,4 @@ I also revised the C# code in the Cast Member controller so that it would approp
 * Coordinating with team members, especially where consistency was required.
 * Workflow planning and version control in the context of a team project.
 
-*Jump to: [Stories](#stories), [Summary of Skills](#summary-of-skills), [Page Top](#the-tech-academy-live-project)*
+*Jump to: [Stories](#stories), [Summary of Skills](#summary-of-skills), [Page Top](#prosper-it-live-project)*
